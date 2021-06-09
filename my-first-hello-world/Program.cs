@@ -1,19 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace my_first_hello_world
 {
     class Program
     {
+
+        Action a = () => Console.WriteLine("it equlas");
   
         static void Main(string[] args)
         {
-            Console.WriteLine("What's your name");
-            string name = Console.ReadLine();
-            Console.WriteLine("What's your age");
-            int age = Convert.ToInt32(Console.ReadLine());
-            
-            Console.Write("\t{0} is {1} years old\n", name, age);
 
+            Dictionary<string,int> dic = new Dictionary<string, int>();
+
+            dic.Add("name", 4);
+            dic.Add("david", 4);
+
+            int i = 9;
+            double j=  .2;
+
+            Console.WriteLine(++i/j-i++);
+
+            // Console.WriteLine($"is Girrffe object => {b as Animal}");
             //this is a comment
 
             /* this is a multiline comment
