@@ -21,6 +21,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EcommerceUI\EcommerceUI.csproj" />
+    <ProjectReference Include="..\EcommerceBusinessLayer\EcommerceBusinessLayer.csproj" />
+    <ProjectReference Include="..\EcommerceDbContext\EcommerceDbContext.csproj" />
+    <ProjectReference Include="..\EcommerceModelsLayer\EcommerceModelsLayer.csproj" />
   </ItemGroup>
 
 </Project>
