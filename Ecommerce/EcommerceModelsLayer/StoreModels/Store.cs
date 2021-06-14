@@ -1,19 +1,18 @@
+using System.Collections.Generic;
 namespace StoreModels
+
 {
     /// <summary>
     /// The main <c>Store</c> class. 
     /// Concatinates all of the fields together of the and returns it as a string 
     /// </summary>
-    public class Store : ILocation
+    public class Store : Address
     {
         public int StoreId { get; set; }
         public string StoreName { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zipcode { get; set; }
         public string ContactNumber { get; set; }
         public string Description { get; set; }
+        public List<Inventory> inventory { get; set; }
 
         /// <summary>
         /// This Constructor is responsible for initizaling the store state
@@ -25,13 +24,10 @@ namespace StoreModels
         /// <param name="ZipCode">String ZipCode</param>
         /// <param name="ContactNumber">String Contact Number</param>
         /// <param name="Description">String Description</param>
-        public Store(string StoreName, string Address, string City, string State, string ZipCode, string ContactNumber, string Description)
+        public Store(string StoreName, string Street, string City, string State, string ZipCode, string ContactNumber, string Description) : base(Street, City, State, ZipCode)
         {
             this.StoreName = StoreName;
-            this.Address = Address;
-            this.City = City;
-            this.State = State;
-            this.Zipcode = ZipCode;
+            this.Street = Street;
             this.ContactNumber = ContactNumber;
             this.Description = Description;
         }
@@ -42,7 +38,7 @@ namespace StoreModels
         /// <returns>A string with all if the fields</returns>
         public string storeInfo()
         {
-            string store_info = $"\t\tStore Information\nName: {this.StoreName}\nAddress:{this.Address}\nCity: {this.City}\nState: {this.State}\n{this.Zipcode}\nContact Number: {this.ContactNumber}\nDesciption: {this.Description}";
+            string store_info = $"\t\tStore Information\nName: {this.StoreName}\nAddress:{this.Street}\nCity: {this.City}\nState: {this.State}\n{this.Zipcode}\nContact Number: {this.ContactNumber}\nDesciption: {this.Description}";
             return store_info;
         }
     }

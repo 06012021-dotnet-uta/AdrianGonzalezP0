@@ -6,7 +6,7 @@ namespace StoreModels
     public class Account
     {
         public string Username { get; set; } // User Password
-        protected string Password { get; set; }
+        public string Password { get; set; }
 
         public Account(string Username, string Password)
         {
