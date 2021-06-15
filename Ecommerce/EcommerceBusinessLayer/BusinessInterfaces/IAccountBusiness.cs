@@ -18,9 +18,9 @@ namespace EcommerceBusinessLayer
     public interface IAccountBusiness
     {
         // string WelcomeMessage();
-        bool createAccount(Account accountObj);
-        bool deleteAccount(Account accountObj);
-        bool updateAccount(Account accountObj);
+        bool addAccount(Account accountObj);
+        bool deleteAccount(string Username);
+        bool updateAccount(string Username);
         void displayAllAccounts();
 
     }

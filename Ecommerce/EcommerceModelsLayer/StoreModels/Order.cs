@@ -1,5 +1,5 @@
 using System.IO;
-namespace EcommerceModelsLayer.StoreModels
+namespace StoreModels
 {
     public class Order
     {
@@ -9,7 +9,7 @@ namespace EcommerceModelsLayer.StoreModels
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
         public decimal TotalAmount { get; set; }
-        public string OderDate { get; set; }
+        public string OrderDate { get; set; }
 
         public Order(int CusotmerId, int StoreId, int ProductId, decimal UnitPrice, int Quantity, decimal TotalAmount, string OrderDate)
         {
@@ -19,7 +19,7 @@ namespace EcommerceModelsLayer.StoreModels
             this.UnitPrice = UnitPrice;
             this.Quantity = Quantity;
             this.TotalAmount = TotalAmount;
-            this.OderDate = OderDate;
+            this.OrderDate = OrderDate;
         }
     }
 }

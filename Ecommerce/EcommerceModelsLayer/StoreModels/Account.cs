@@ -8,6 +8,7 @@ namespace StoreModels
         public string Username { get; set; } // User Password
         public string Password { get; set; }
 
+        public Account() { }
         public Account(string Username, string Password)
         {
             this.Username = Username;

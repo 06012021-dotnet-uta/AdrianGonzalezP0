@@ -1,11 +1,24 @@
 
+using System;
+using StoreAccount = StoreModels.Account;
+using DbAccount = EcommerceDbContext.Account;
+
+using StoreCustomer = StoreModels.Customer;
+using DbCustomer = EcommerceDbContext.Customer;
+
+using StoreStore = StoreModels.Store;
+using DbStore = EcommerceDbContext.Store;
+
+using StoreProduct = StoreModels.Product;
+using DbProduct = EcommerceDbContext.Product;
+
 namespace Mapper
 {
     public static class MapperClassAppToDb
     {
-        public static EcommerceDbContext.Account AppAccountToDbAccount(StoreModels.Account accountObj)
+        public static DbAccount AppAccountToDbAccount(StoreAccount accountObj)
         {
-            EcommerceDbContext.Account account = new EcommerceDbContext.Account()
+            DbAccount account = new()
             {
                 Username = accountObj.Username,
                 Password = accountObj.Password,
@@ -14,9 +27,9 @@ namespace Mapper
             return account;
         }
 
-        public static EcommerceDbContext.Customer AppCustomerToDbCustomer(StoreModels.Customer customerObj)
+        public static DbCustomer AppCustomerToDbCustomer(StoreCustomer customerObj)
         {
-            EcommerceDbContext.Customer customer = new EcommerceDbContext.Customer()
+            DbCustomer customer = new()
             {
                 CustomerId = customerObj.CustomerId,
                 Username = customerObj.Account.Username,
@@ -33,9 +46,9 @@ namespace Mapper
             return customer;
         }
 
-        public static EcommerceDbContext.Store AppStoreToDbStore(StoreModels.Store storeObj)
+        public static DbStore AppStoreToDbStore(StoreStore storeObj)
         {
-            EcommerceDbContext.Store store = new EcommerceDbContext.Store()
+            DbStore store = new()
             {
                 StoreId = storeObj.StoreId,
                 StoreName = storeObj.StoreName,
@@ -49,9 +62,9 @@ namespace Mapper
             return store;
         }
 
-        public static EcommerceDbContext.Product AppProducToDbProduct(StoreModels.Product productObj)
+        public static DbProduct AppProducToDbProduct(StoreProduct productObj)
         {
-            EcommerceDbContext.Product product = new EcommerceDbContext.Product()
+            DbProduct product = new()
             {
                 ProductId = productObj.CategoryId,
                 TypeId = productObj.CategoryId,

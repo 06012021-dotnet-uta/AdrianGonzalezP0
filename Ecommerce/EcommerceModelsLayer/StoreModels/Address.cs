@@ -10,6 +10,7 @@ namespace StoreModels
         public string State { get; set; }
         public string Zipcode { get; set; }
 
+        public Address() { }
         public Address(string Street, string City, string State, string Zipcode)
         {
             this.Street = Street;

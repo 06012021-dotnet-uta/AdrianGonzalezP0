@@ -14,6 +14,7 @@ namespace StoreModels
         public string ContactNumber { get; set; }      // The customers contact info
         public string Email { get; set; }              // The email of customer
 
+        public Customer(): base() { }
         /// <summary>
         /// This Constructor is responsible for initializing the state of the customer
         /// </summary>
