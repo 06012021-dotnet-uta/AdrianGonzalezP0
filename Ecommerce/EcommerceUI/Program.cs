@@ -49,6 +49,8 @@ namespace EcommerceUI
                             break;
                     }
 
+                    Console.WriteLine("\n");
+
                 } while (userSelects != 4); // Selection Part
             } while(true); // Actuall Program
         }

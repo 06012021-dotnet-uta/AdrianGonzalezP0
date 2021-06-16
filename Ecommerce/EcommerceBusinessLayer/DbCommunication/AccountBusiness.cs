@@ -3,13 +3,14 @@ using System.Linq;
 using EcommerceDbContext;
 using Mapper;
 using DbContext;
+using Microsoft.EntityFrameworkCore;
 using StoreAccount = StoreModels.Account;
 using DbAccount = EcommerceDbContext.Account;
 
 
 namespace EcommerceBusinessLayer
 {
-    public class AccountBusiness : IAccountBusiness, ILogin
+    public class AccountBusiness : IAccountBusiness
     {
 
         private Project0Context _context;
@@ -35,7 +36,7 @@ namespace EcommerceBusinessLayer
                 _context.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (DbUpdateException e)
             {
                 Console.WriteLine($"\nError username already exists: {accountObj.Username}\nError Message: {e.Message}\n");
                 return false;
@@ -58,7 +59,7 @@ namespace EcommerceBusinessLayer
                 _context.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (DbUpdateException e)
             {
                 Console.WriteLine($"Error could not remove account: {e.Message}");
                 return false;
@@ -70,17 +71,16 @@ namespace EcommerceBusinessLayer
         /// </summary>
         /// <param name="accountObj"></param>
         /// <returns>Returns true if update succeeded</returns>
-        public bool updateAccount(string Username)
+        public bool updateAccount(StoreAccount accountObj)
         {
-            
+            DbAccount newAccount = MapperClassAppToDb.AppAccountToDbAccount(accountObj);
             try
             {
-                var account = _context.Accounts.Single(acc => acc.Username == Username);
-                _context.Accounts.Update(account);
+                _context.Accounts.Update(newAccount);
                 _context.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (DbUpdateException e)
             {
                 Console.WriteLine($"Error could not add update account: {e.Message}");
                 return false;
@@ -102,7 +102,7 @@ namespace EcommerceBusinessLayer
                     Console.WriteLine($"Username: {account.Username} Password: {account.Password}\n");
                 }
             } 
-            catch (Exception e) {
+            catch (ArgumentNullException e) {
                 throw new Exception($"Error could not retrive accounts: {e.Message}");
             }
         }
@@ -133,7 +133,12 @@ namespace EcommerceBusinessLayer
                 var account = _context.Accounts.Single(acc => acc.Username == userName && acc.Password == password);
                 return true;
             }
-            catch (Exception)
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine($"\nError: Incorrect username or password");
+                return false;
+            }
+            catch (InvalidOperationException)
             {
                 Console.WriteLine($"\nError: Incorrect username or password");
                 return false;

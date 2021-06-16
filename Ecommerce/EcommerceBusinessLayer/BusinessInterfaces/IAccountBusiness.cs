@@ -20,7 +20,7 @@ namespace EcommerceBusinessLayer
         // string WelcomeMessage();
         bool addAccount(Account accountObj);
         bool deleteAccount(string Username);
-        bool updateAccount(string Username);
+        bool updateAccount(Account accountObj);
         void displayAllAccounts();
 
     }

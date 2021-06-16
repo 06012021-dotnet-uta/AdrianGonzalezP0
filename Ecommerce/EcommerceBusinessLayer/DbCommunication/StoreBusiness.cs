@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace EcommerceBusinessLayer
 {
-    class StoreBusiness: IStoreBusiness
+    public class StoreBusiness: IStoreBusiness
     {
         private readonly Project0Context _;
 
@@ -51,17 +51,19 @@ namespace EcommerceBusinessLayer
             } 
         }
 
-        public void SearchByStoreName(string storeName)
+        public List<DbStore> SearchByStoreName(string storeName)
         {
             try
             {
-                long length = _.Stores.LongCount();
+                List<DbStore> stores = _.Stores.Where(st => st.StoreName == storeName).ToList();
+                return stores;
 
             }
-            catch (Exception e)
+            catch (ArgumentNullException e)
             {
 
-                throw new Exception($"Could not retrieve store from database: {e.Message}");
+                Console.WriteLine($"Could not retrieve store from database: {e.Message}");
+                return null;
 
             }
         }
