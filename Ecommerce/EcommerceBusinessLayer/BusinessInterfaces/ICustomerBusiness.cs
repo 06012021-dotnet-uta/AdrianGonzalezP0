@@ -1,4 +1,5 @@
 ﻿using StoreModels;
+using System.Collections.Generic;
 using DbCustomer = EcommerceDbContext.Customer;
 
 namespace EcommerceBusinessLayer
@@ -8,7 +9,7 @@ namespace EcommerceBusinessLayer
         bool addCustomer(Customer accountObj);
         bool deleteCustomer(int custmerId);
         bool updateCustomer(int customerId);
-        DbCustomer searchCustomer(string Fname, string Lname);
+        List<DbCustomer> searchCustomer(string Fname, string Lname);
         DbCustomer searchCustomer(string username);
     }
 }

@@ -6,6 +6,7 @@ using DbContext;
 using StoreCustomer = StoreModels.Customer;
 using DbCustomer = EcommerceDbContext.Customer;
 using StoreAccount = StoreModels.Account;
+using System.Collections.Generic;
 
 namespace EcommerceBusinessLayer
 {
@@ -30,7 +31,7 @@ namespace EcommerceBusinessLayer
             }
             catch(Exception e)
             {
-                Console.WriteLine($"\nError Message: {e.Message}\n");
+                Console.WriteLine($"\nCould not save changes\n Error Message: {e.Message}\n");
                 return false;
             }
         }
@@ -51,15 +52,16 @@ namespace EcommerceBusinessLayer
                 return false;
             }
         }
-        public DbCustomer searchCustomer(string Fname, string Lname)
+        public List<DbCustomer> searchCustomer(string Fname, string Lname)
         {
             try
             {
-                var customer = _context.Customers.Single(c => c.Fname.ToLower() == Fname.Trim().ToLower() && c.Lname == Lname.Trim().ToLower());
+                var customer = _context.Customers.Where(c => c.Fname.ToLower() == Fname.Trim().ToLower() && c.Lname.ToLower() == Lname.Trim().ToLower()).ToList();
                 return customer;
             } catch (Exception e)
             {
-                throw new Exception($"Could not find customer with \"{Fname}\" \"{Lname}\"\nError code: {e.Message}");
+                Console.WriteLine($"Could not find customer with \"{Fname}\" \"{Lname}\"\nError code: {e.Message}");
+                return null;
             }
         }
 
@@ -71,9 +73,10 @@ namespace EcommerceBusinessLayer
                 
                 return customer;
             }
-            catch (Exception e)
+            catch (ArgumentNullException e)
             {
-                throw new Exception($"Could not find customer with \"{username}\"\nError code: {e.Message}");
+                Console.WriteLine($"Could not find customer with \"{username}\"\nError code: {e.Message}");
+                return null;
             }
         }
 
@@ -94,6 +97,76 @@ namespace EcommerceBusinessLayer
             }
         }
 
+        public long LengthOfCustomer()
+        {
+            try
+            {
+                long length = _context.Customers.LongCount();
+                return length;
+
+            }
+            catch (ArgumentNullException e)
+            {
+
+                Console.WriteLine($"Could not retrieve store from database: {e.Message}");
+                return 0;
+            }
+        }
+
+        public void DisplayAllCustomers()
+        {
+            int num = 1;
+            try
+            {
+                var customers = _context.Customers.OrderBy(customer => customer.Fname);
+
+                foreach (var customer in customers)
+                {
+                    Console.WriteLine($"{num++}. {customer.Fname} {customer.Lname}");
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+
+                throw new Exception($"Could not retrieve store from database: {e.Message}");
+            }
+        }
+
+        public void DisplayAllCustomers(List<DbCustomer> customers)
+        {
+            if (customers == null) 
+            {
+                Console.WriteLine("Empty List");
+                goto Exit;
+            }
+
+            foreach (var customer in customers)
+            {
+                string info = $"\n\t\tCustomer Information\nUsername: {customer.Username}\nFirst Name: {customer.Fname}\nLast Name: {customer.Lname}\nAddress: {customer.Address}\nCity: {customer.City}\nState: {customer.State}\nZipcode: {customer.ZipCode}\nContact Number: {customer.ContactNumber}\nEmail: {customer.Email}";
+                Console.Write(info);
+            }
+
+            Console.WriteLine();
+
+        Exit:;
+        }
+
+        public List<DbCustomer> RetrieveAllCostumers()
+        {
+            try
+            {
+                var stores = _context.Customers.OrderBy(customer => customer.Fname).ToList();
+                return stores;
+
+
+            }
+            catch (ArgumentNullException e)
+            {
+
+                throw new Exception($"Could not retrieve store from database: {e.Message}");
+            }
+        }
+
         public StoreCustomer createCustomer(StoreAccount newAccount)
         {
             StoreCustomer newCustomer = new();
@@ -110,13 +183,13 @@ namespace EcommerceBusinessLayer
             Console.Write("State: ");
             newCustomer.State = Console.ReadLine().Trim();
             Console.Write("ZipCode: ");
-            newCustomer.Zipcode = Console.ReadLine().Trim();
+            newCustomer.ZipCode = Console.ReadLine().Trim();
             Console.Write("Email: ");
             newCustomer.Email = Console.ReadLine().Trim();
             Console.Write("Contact Number: ");
             newCustomer.ContactNumber = Console.ReadLine().Trim();
 
-            newCustomer.Account = newAccount;
+            newCustomer.Username = newAccount.Username;
 
             return newCustomer;
         }

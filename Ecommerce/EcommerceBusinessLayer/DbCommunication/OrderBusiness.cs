@@ -2,14 +2,17 @@
 using DbContext;
 using System.Linq;
 using EcommerceDbContext;
+using Mapper;
+using StoreOrder = StoreModels.Order;
+using DbOrder = EcommerceDbContext.Order;
 
 namespace EcommerceBusinessLayer
 {
-    public class OrderHistory : IHistory
+    public class OrderBusiness : IOrder
     {
-        private Project0Context _context;
+        private readonly Project0Context _context;
 
-        public OrderHistory()
+        public OrderBusiness()
         {
             _context = DbConextProject.DbContext;
         }
@@ -50,6 +53,23 @@ namespace EcommerceBusinessLayer
 
                 throw;
             }
+        }
+
+        public bool placeOrder(StoreOrder orderObj)
+        {
+            DbOrder newOrder = MapperClassAppToDb.AppOrderToDbOrder(orderObj);
+
+            try
+            {
+                var orderPlace = _context.Orders.Add(newOrder);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"\nCould not save changes\n Error Message: {e.Message}\n");
+                return false;
+            }   
         }
     }
 }

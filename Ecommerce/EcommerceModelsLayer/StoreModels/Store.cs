@@ -12,7 +12,8 @@ namespace StoreModels
         public string StoreName { get; set; }
         public string ContactNumber { get; set; }
         public string Description { get; set; }
-        public List<Inventory> inventory { get; set; }
+
+        public Store() { }
 
         /// <summary>
         /// This Constructor is responsible for initizaling the store state
@@ -38,7 +39,7 @@ namespace StoreModels
         /// <returns>A string with all if the fields</returns>
         public string storeInfo()
         {
-            string store_info = $"\t\tStore Information\nName: {this.StoreName}\nAddress:{this.Street}\nCity: {this.City}\nState: {this.State}\n{this.Zipcode}\nContact Number: {this.ContactNumber}\nDesciption: {this.Description}";
+            string store_info = $"\t\tStore Information\nName: {this.StoreName}\nAddress:{this.Street}\nCity: {this.City}\nState: {this.State}\n{this.ZipCode}\nContact Number: {this.ContactNumber}\nDesciption: {this.Description}";
             return store_info;
         }
     }

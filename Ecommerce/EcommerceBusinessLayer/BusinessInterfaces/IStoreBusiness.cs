@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EcommerceModelsLayer.Mapper
+namespace EcommerceBusinessLayer
 {
-    class MapperClassDBToDb
+    interface IStoreBusiness
     {
+        void DisplayAllStores();
+        long LengthOfStore();
+
     }
 }

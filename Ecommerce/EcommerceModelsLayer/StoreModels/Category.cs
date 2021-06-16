@@ -5,6 +5,7 @@ namespace StoreModels
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
 
+        public Category() { }
         public Category(int CategoryId, string CategoryName)
         {
             this.CategoryId = CategoryId;

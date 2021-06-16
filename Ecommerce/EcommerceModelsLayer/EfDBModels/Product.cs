@@ -14,9 +14,9 @@ namespace EcommerceDbContext
         }
 
         public int ProductId { get; set; }
-        public int? TypeId { get; set; }
+        public int? TypeId { get; set; } = 0;
         public string ProductName { get; set; }
-        public decimal? UnitPrice { get; set; }
+        public decimal? UnitPrice { get; set; } = 0.00m;
         public string Description { get; set; }
 
         public virtual Type Type { get; set; }

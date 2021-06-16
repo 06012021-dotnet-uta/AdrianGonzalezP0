@@ -1,4 +1,4 @@
-using StoreAccount = StoreModels.Account;
+﻿using StoreAccount = StoreModels.Account;
 using DbAccount = EcommerceDbContext.Account;
 
 using StoreCustomer = StoreModels.Customer;
@@ -19,11 +19,11 @@ using DbOrder = EcommerceDbContext.Order;
 
 namespace Mapper
 {
-    public static class MapperClassAppToDb
+    public static class MapperClassDBToApp
     {
-        public static DbAccount AppAccountToDbAccount(StoreAccount accountObj)
+        public static StoreAccount AppAccountToDbAccount(DbAccount accountObj)
         {
-            DbAccount account = new()
+            StoreAccount account = new()
             {
                 Username = accountObj.Username,
                 Password = accountObj.Password,
@@ -32,15 +32,15 @@ namespace Mapper
             return account;
         }
 
-        public static DbCustomer AppCustomerToDbCustomer(StoreCustomer customerObj)
+        public static StoreCustomer AppCustomerToDbCustomer(DbCustomer customerObj)
         {
-            DbCustomer customer = new()
+            StoreCustomer customer = new()
             {
                 CustomerId = customerObj.CustomerId,
                 Username = customerObj.Username,
                 Fname = customerObj.Fname,
                 Lname = customerObj.Lname,
-                Address = customerObj.Street,
+                Street = customerObj.Address,
                 City = customerObj.City,
                 State = customerObj.State,
                 ZipCode = customerObj.ZipCode,
@@ -51,13 +51,13 @@ namespace Mapper
             return customer;
         }
 
-        public static DbStore AppStoreToDbStore(StoreStore storeObj)
+        public static StoreStore AppStoreToDbStore(DbStore storeObj)
         {
-            DbStore store = new()
+            StoreStore store = new()
             {
                 StoreId = storeObj.StoreId,
                 StoreName = storeObj.StoreName,
-                Address = storeObj.Street,
+                Street = storeObj.Address,
                 City = storeObj.State,
                 ZipCode = storeObj.ZipCode,
                 ContactNumber = storeObj.ContactNumber,
@@ -67,14 +67,14 @@ namespace Mapper
             return store;
         }
 
-        public static DbProduct AppProducToDbProduct(StoreProduct productObj)
+        public static StoreProduct AppProducToDbProduct(DbProduct productObj)
         {
-            DbProduct product = new()
+            StoreProduct product = new()
             {
-                ProductId = productObj.CategoryId,
-                TypeId = productObj.CategoryId,
+                CategoryId = (int)productObj.TypeId,
+                CategoryName = productObj.ProductName,
                 ProductName = productObj.ProductName,
-                UnitPrice = productObj.UnitPrice,
+                UnitPrice = (decimal)productObj.UnitPrice,
                 Description = productObj.Description,
 
             };
@@ -82,20 +82,20 @@ namespace Mapper
             return product;
         }
 
-        public static DbType AppTypeToDbType (StoreType categoryObj)
+        public static StoreType AppTypeToDbType(DbType categoryObj)
         {
-            DbType category = new()
+            StoreType category = new()
             {
-                TypeId = categoryObj.CategoryId,
-                Type1 = categoryObj.CategoryName
+                CategoryId = categoryObj.TypeId,
+                CategoryName = categoryObj.Type1
             };
 
             return category;
         }
 
-        public static DbOrder AppOrderToDbOrder(StoreOrder orderObj)
+        public static StoreOrder AppOrderToDbOrder(DbOrder orderObj)
         {
-            DbOrder order = new DbOrder()
+            StoreOrder order = new()
             {
                 CustomerId = orderObj.CustomerId,
                 StoreId = orderObj.StoreId,

@@ -7,6 +7,14 @@ namespace StoreModels
         public decimal UnitPrice { get; set; }
         public string Description { get; set; }
 
+        public Product(): base() { }
+        /// <summary>
+        /// Responsible of Initializing the prodocuts
+        /// </summary>
+        /// <param name="ProductName"></param>
+        /// <param name="UnitPrice"></param>
+        /// <param name="Description"></param>
+        /// <param name="categoryObj"></param>
         public Product(string ProductName, decimal UnitPrice, string Description, Category categoryObj) : base(categoryObj)
         {
             this.ProductName = ProductName;

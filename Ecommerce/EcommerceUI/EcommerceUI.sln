@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceUI", "EcommerceUI.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Test", "..\Ecommerce.Test\Ecommerce.Test.csproj", "{A2EAFBA0-9F41-432E-BE53-063F951041B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceDbContext", "..\EcommerceDbContext\EcommerceDbContext.csproj", "{FB84F2AD-92CC-4D52-ACED-C674245D6D73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceDbContext", "..\EcommerceDbContext\EcommerceDbContext.csproj", "{FB84F2AD-92CC-4D52-ACED-C674245D6D73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceModelsLayer", "..\EcommerceModelsLayer\EcommerceModelsLayer.csproj", "{DFDA4FE5-B143-47C4-A720-76C57BAE45DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceModelsLayer", "..\EcommerceModelsLayer\EcommerceModelsLayer.csproj", "{DFDA4FE5-B143-47C4-A720-76C57BAE45DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceBusinessLayer", "..\EcommerceBusinessLayer\EcommerceBusinessLayer.csproj", "{D609B4E1-DF03-4F5C-87FE-ACC25AE280ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceBusinessLayer", "..\EcommerceBusinessLayer\EcommerceBusinessLayer.csproj", "{D609B4E1-DF03-4F5C-87FE-ACC25AE280ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
