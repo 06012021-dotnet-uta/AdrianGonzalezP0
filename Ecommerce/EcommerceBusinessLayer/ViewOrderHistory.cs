@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace EcommerceBusinessLayer
 {
-    interface IStoreBusiness
+    class ViewOrderHistory
     {
-        void DisplayAllStores();
-        long LengthOfStore();
-
     }
 }

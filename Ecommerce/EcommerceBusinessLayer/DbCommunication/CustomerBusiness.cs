@@ -7,191 +7,119 @@ using StoreCustomer = StoreModels.Customer;
 using DbCustomer = EcommerceDbContext.Customer;
 using StoreAccount = StoreModels.Account;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceBusinessLayer
 {
-    public class CustomerBusiness : ICustomerBusiness
+    public class CustomerBusiness : ICustomer
     {
-        private Project0Context _context;
+        private readonly Project0Context _context;
+        private DbCustomer dbCustomer;
+        private StoreCustomer storeCustomer;
+
         public CustomerBusiness() 
         {
             _context = DbConextProject.DbContext;
         
         }
-
-        public bool addCustomer(StoreCustomer customerObj)
+        
+        /// <summary>
+        /// Creates a new Customer in data entry for Customers table
+        /// </summary>
+        /// <param name="obj"> An instance of a Customer object</param>
+        /// <returns>True if successfuly added to database. False otherwise.</returns>
+        public bool Create(StoreCustomer obj)
         {
-            DbCustomer newCustomer = MapperClassAppToDb.AppCustomerToDbCustomer(customerObj);
-            
+            dbCustomer = MapperClassAppToDb.AppCustomerToDbCustomer(obj);
+
             try
             {
-                _context.Customers.Add(newCustomer);
+                _context.Customers.Add(dbCustomer);
                 _context.SaveChanges();
                 return true;
             }
-            catch(Exception e)
+            catch (DbUpdateException e)
+
             {
-                Console.WriteLine($"\nCould not save changes\n Error Message: {e.Message}\n");
+                Console.WriteLine($"Could not create Customer with {obj.customerInfo()}\nError: {e.Message}");
                 return false;
             }
         }
 
-        public bool deleteCustomer(int customerId)
+        /// <summary>
+        /// Deletes and existing cutomer from the databse.
+        /// </summary>
+        /// <param name="obj">An instance of a Customer object</param>
+        /// <returns>True if successfuly added to database. False otherwise.</returns>
+        public bool Delete(StoreCustomer obj)
         {
+            dbCustomer = MapperClassAppToDb.AppCustomerToDbCustomer(obj);
+
             try
             {
-                var customer = _context.Customers.Single(c => c.CustomerId == customerId);
-                _context.Customers.Remove(customer);
+                _context.Customers.Remove(dbCustomer);
                 _context.SaveChanges();
                 return true;
+            }
+            catch (DbUpdateException e)
 
-            }
-            catch (Exception e)
             {
-                Console.WriteLine($"\nCould not remove {customerId}\nError Message: {e.Message}\n");
-                return false;
-            }
-        }
-        public List<DbCustomer> searchCustomer(string Fname, string Lname)
-        {
-            try
-            {
-                var customer = _context.Customers.Where(c => c.Fname.ToLower() == Fname.Trim().ToLower() && c.Lname.ToLower() == Lname.Trim().ToLower()).ToList();
-                return customer;
-            } catch (Exception e)
-            {
-                Console.WriteLine($"Could not find customer with \"{Fname}\" \"{Lname}\"\nError code: {e.Message}");
-                return null;
-            }
-        }
-
-        public DbCustomer searchCustomer(string username)
-        {
-            try
-            {
-                var customer = _context.Customers.Single(c => c.Username == username);
-                
-                return customer;
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine($"Could not find customer with \"{username}\"\nError code: {e.Message}");
-                return null;
-            }
-        }
-
-        public bool updateCustomer(int customerId)
-        {
-            try
-            {
-                var customer = _context.Customers.Single(c => c.CustomerId == customerId);
-                _context.Customers.Remove(customer);
-                _context.SaveChanges();
-                return true;
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"\nCould not remove {customerId}\nError Message: {e.Message}\n");
+                Console.WriteLine($"Could not delete Customer with {obj.customerInfo()}\nError: {e.Message}");
                 return false;
             }
         }
 
-        public long LengthOfCustomer()
+        /// <summary>
+        /// Returns the number of elements from Customer
+        /// </summary>
+        /// <returns>The number of elements as a long</returns>
+        public long LengthOfCustomers()
         {
             try
             {
-                long length = _context.Customers.LongCount();
-                return length;
-
+                long lengthCustomer = _context.Customers.Count();
+                return lengthCustomer;
             }
-            catch (ArgumentNullException e)
+            catch (OverflowException e)
             {
-
-                Console.WriteLine($"Could not retrieve store from database: {e.Message}");
+                Console.WriteLine($"Could not retrieve length of table\nError Message {e.Message}");
                 return 0;
             }
         }
 
-        public void DisplayAllCustomers()
-        {
-            int num = 1;
-            try
-            {
-                var customers = _context.Customers.OrderBy(customer => customer.Fname);
-
-                foreach (var customer in customers)
-                {
-                    Console.WriteLine($"{num++}. {customer.Fname} {customer.Lname}");
-                }
-            }
-            catch (ArgumentNullException e)
-            {
-
-                throw new Exception($"Could not retrieve store from database: {e.Message}");
-            }
-        }
-
-        public void DisplayAllCustomers(List<DbCustomer> customers)
-        {
-            if (customers == null) 
-            {
-                Console.WriteLine("Empty List");
-                goto Exit;
-            }
-
-            foreach (var customer in customers)
-            {
-                string info = $"\n\t\tCustomer Information\nUsername: {customer.Username}\nFirst Name: {customer.Fname}\nLast Name: {customer.Lname}\nAddress: {customer.Address}\nCity: {customer.City}\nState: {customer.State}\nZipcode: {customer.ZipCode}\nContact Number: {customer.ContactNumber}\nEmail: {customer.Email}";
-                Console.Write(info);
-            }
-
-            Console.WriteLine();
-
-        Exit:;
-        }
-
-        public List<DbCustomer> RetrieveAllCostumers()
+        /// <summary>
+        /// Retrieves a single data entry from Customers table with a given name
+        /// </summary>
+        /// <param name="keyValue">Customers name</param>
+        /// <returns>A single data entry from Customers table</returns>
+        public StoreCustomer Read(string keyValue)
         {
             try
             {
-                var stores = _context.Customers.OrderBy(customer => customer.Fname).ToList();
-                return stores;
-
-
+                dbCustomer = _context.Customers.SingleOrDefault(customer => customer.Fname == keyValue);
+                storeCustomer = MapperClassDBToApp.DbCustomerToClassCustomer(dbCustomer);
+                return storeCustomer;
             }
-            catch (ArgumentNullException e)
+            catch (Exception)
             {
 
-                throw new Exception($"Could not retrieve store from database: {e.Message}");
+                return null;
             }
         }
 
-        public StoreCustomer createCustomer(StoreAccount newAccount)
+        public List<StoreCustomer> SearchCustomer(string Fname, string Lname)
         {
-            StoreCustomer newCustomer = new();
+            throw new NotImplementedException();
+        }
 
-            // Ask for user's information
-            Console.Write("First Name: ");
-            newCustomer.Fname = Console.ReadLine().Trim();
-            Console.Write("Last Name: ");
-            newCustomer.Lname = Console.ReadLine().Trim();
-            Console.Write("Street: ");
-            newCustomer.Street = Console.ReadLine().Trim();
-            Console.Write("City: ");
-            newCustomer.City = Console.ReadLine().Trim();
-            Console.Write("State: ");
-            newCustomer.State = Console.ReadLine().Trim();
-            Console.Write("ZipCode: ");
-            newCustomer.ZipCode = Console.ReadLine().Trim();
-            Console.Write("Email: ");
-            newCustomer.Email = Console.ReadLine().Trim();
-            Console.Write("Contact Number: ");
-            newCustomer.ContactNumber = Console.ReadLine().Trim();
+        public StoreCustomer SearchCustomer(string username)
+        {
+            throw new NotImplementedException();
+        }
 
-            newCustomer.Username = newAccount.Username;
-
-            return newCustomer;
+        public bool Update(StoreCustomer obj)
+        {
+            throw new NotImplementedException();
         }
     } //EOC
 } // EON

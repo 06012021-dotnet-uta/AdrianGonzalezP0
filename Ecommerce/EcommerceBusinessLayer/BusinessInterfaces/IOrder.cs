@@ -1,11 +1,12 @@
-﻿using StoreOrder = StoreModels.Order;
+﻿using StoreModels;
+using System.Collections.Generic;
 
 namespace EcommerceBusinessLayer
 {
-    interface IOrder
+    interface IOrder: ICrud<Order>
     {
-        void displayAllHistoryByStore(int storeId);
-        void displayAllHistoryByCustomer(int customerId);
-        bool placeOrder(StoreOrder orderObj);
+        List<Order> GetOrderByStoreId(int orderId);
+        List<Order> GetOrderByCustomerId(int storeId);
+        List<Order> GetAllOrders();
     }
 }

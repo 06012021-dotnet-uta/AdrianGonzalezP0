@@ -17,7 +17,7 @@ namespace StoreModels
 
         public string accountInfo()
         {
-            string account_info = $"Username:{this.Username}\nPassword: {this.Password}";
+            string account_info = $"\t\tAccount Info\nUsername:{this.Username}\nPassword: {this.Password}";
             return account_info;
         }
 

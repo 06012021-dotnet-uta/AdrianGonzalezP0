@@ -16,6 +16,9 @@ using DbProduct = EcommerceDbContext.Product;
 using StoreOrder = StoreModels.Order;
 using DbOrder = EcommerceDbContext.Order;
 
+using StoreInventory = StoreModels.Inventory;
+using DbInventory = EcommerceDbContext.Inventory;
+
 
 namespace Mapper
 {
@@ -106,6 +109,17 @@ namespace Mapper
             };
 
             return order;
+        }
+        public static DbInventory AppInventoryToDbInventory(StoreInventory inventoryObj)
+        {
+            DbInventory inventory = new DbInventory()
+            {
+                StoreId = inventoryObj.StoreId,
+                ProductId = inventoryObj.ProductId,
+                Quantity = inventoryObj.Quantity
+            };
+
+            return inventory;
         }
     }
 }

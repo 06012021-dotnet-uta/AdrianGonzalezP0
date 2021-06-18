@@ -6,141 +6,169 @@ using DbContext;
 using Microsoft.EntityFrameworkCore;
 using StoreAccount = StoreModels.Account;
 using DbAccount = EcommerceDbContext.Account;
-
+using System.Collections.Generic;
 
 namespace EcommerceBusinessLayer
 {
-    public class AccountBusiness : IAccountBusiness
+    public class AccountBusiness : IAccount
     {
 
-        private Project0Context _context;
+        private readonly Project0Context _context;
+        private DbAccount dbAccount;
+        private StoreAccount storeAccount;
 
         public AccountBusiness()
         {
             _context = DbConextProject.DbContext;
         }
 
-
         /// <summary>
-        /// Is responsible for creating the account 
+        /// Creates an Account for new users
         /// </summary>
-        /// <param name="accountObj"></param>
-        /// <returns>If Successful returns true if not false</returns>
-        public bool addAccount(StoreAccount accountObj)
+        /// <param name="obj"></param>
+        /// <returns>Returns true if saved to database succesfully. False if an error occurred</returns>
+        public bool Create(StoreAccount obj)
         {
-            DbAccount newAccount = MapperClassAppToDb.AppAccountToDbAccount(accountObj);
+            dbAccount = MapperClassAppToDb.AppAccountToDbAccount(obj);
 
             try
             {
-                _context.Accounts.Add(newAccount);
+                _context.Accounts.Add(dbAccount);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (DbUpdateException e)
+            
+            {
+                Console.WriteLine($"Could not create account with {obj.accountInfo()}\nError: {e.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Finds an user in the Database with username and passoword
+        /// </summary>
+        /// <param name="account">Instance of an Account</param>
+        /// <returns>Returns true if user exists in the database. False if no user was found with username and password provided with</returns>
+        public bool Credentials(StoreAccount account)
+        {
+            dbAccount = MapperClassAppToDb.AppAccountToDbAccount(account);
+
+            try
+            {
+                return _context.Accounts.Contains(dbAccount);
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine($"Could not retrieve account with {dbAccount.Username}\nError Message: {e.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Delete an existing account.
+        /// </summary>
+        /// <param name="obj">Instance of an Account</param>
+        /// <returns></returns>
+        public bool Delete(StoreAccount obj)
+        {
+            dbAccount = MapperClassAppToDb.AppAccountToDbAccount(obj);
+
+            try
+            {
+                _context.Accounts.Remove(dbAccount);
                 _context.SaveChanges();
                 return true;
             }
             catch (DbUpdateException e)
             {
-                Console.WriteLine($"\nError username already exists: {accountObj.Username}\nError Message: {e.Message}\n");
+                Console.WriteLine($"Could not delete account with {obj.Username}\nError: {e.Message}");
                 return false;
             }
         }
 
-
         /// <summary>
-        /// Deletes account from database
+        /// Finds a specific account
         /// </summary>
-        /// <param name="accountObj"></param>
-        /// <returns>If Successful returns true if not false</returns>
-        public bool deleteAccount(string Username)
-        {
+        /// <param name="username"></param>
+        /// <returns>An existing account</returns>
 
+        public StoreAccount GetAccount(string username)
+        {
             try
             {
-                var account = _context.Accounts.Single(acc => acc.Username == Username);
-                _context.Accounts.Remove(account);
+                dbAccount = _context.Accounts.Single(acc => acc.Username.ToLower().Trim() == username.ToLower().Trim());
+                storeAccount = MapperClassDBToApp.DbAccountToClassAccount(dbAccount);
+                return storeAccount;
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine($"Could Retrieve Account {username}\nError Message: {e.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all of the accounts from database
+        /// </summary>
+        /// <returns>A List of Accounts</returns>
+        public List<StoreAccount> GetAllAccounts()
+        {
+            List<StoreAccount> listOfAccounts = new();
+            try
+            {
+                List<DbAccount> dbaccounts = _context.Accounts.ToList();
+
+                listOfAccounts = dbaccounts.ConvertAll(dbAccount => MapperClassDBToApp.DbAccountToClassAccount(dbAccount));
+
+                return listOfAccounts;
+
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine($"Could not retrieve all account\nError Message:{e.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Retries an Account object by 
+        /// </summary>
+        /// <param name="obj">An instance of a Account Class</param>
+        /// <returns>Returns an Account object or null if not found</returns>
+        public StoreAccount Read(string Username)
+        {
+            try
+            {
+                dbAccount = _context.Accounts.Single(acc => acc.Username.ToLower().Trim() == Username.ToLower().Trim());
+                storeAccount = MapperClassDBToApp.DbAccountToClassAccount(dbAccount);
+                return storeAccount;
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine($"Could Retrieve Account {Username}\nError Message: {e.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing account information
+        /// </summary>
+        /// <param name="obj">An instance of a Account Class</param>
+        /// <returns>True if successfuly updated. False if failed to update</returns>
+        public bool Update(StoreAccount obj)
+        {
+            try
+            {
+
+                dbAccount = MapperClassAppToDb.AppAccountToDbAccount(obj);
+                _context.Accounts.Update(dbAccount);
                 _context.SaveChanges();
                 return true;
             }
             catch (DbUpdateException e)
             {
-                Console.WriteLine($"Error could not remove account: {e.Message}");
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Update Account from Database
-        /// </summary>
-        /// <param name="accountObj"></param>
-        /// <returns>Returns true if update succeeded</returns>
-        public bool updateAccount(StoreAccount accountObj)
-        {
-            DbAccount newAccount = MapperClassAppToDb.AppAccountToDbAccount(accountObj);
-            try
-            {
-                _context.Accounts.Update(newAccount);
-                _context.SaveChanges();
-                return true;
-            }
-            catch (DbUpdateException e)
-            {
-                Console.WriteLine($"Error could not add update account: {e.Message}");
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Retrieves and displays all of information about the users
-        /// </summary>
-        /// 
-        public void displayAllAccounts()
-        {
-            try 
-            {
-                var accounts = _context.Accounts.Select(acc => acc);
-
-                foreach (DbAccount account in accounts)
-                {
-                    Console.WriteLine($"Username: {account.Username} Password: {account.Password}\n");
-                }
-            } 
-            catch (ArgumentNullException e) {
-                throw new Exception($"Error could not retrive accounts: {e.Message}");
-            }
-        }
-
-        public StoreAccount createAccount()
-        {
-            StoreAccount newAccount = new();
-
-            // Ask for all fields required
-            Console.Write("Username: ");
-            newAccount.Username = Console.ReadLine().Trim();
-            Console.Write("Password: ");
-            newAccount.Password = Console.ReadLine();
-
-            return newAccount;
-        }
-
-        /// <summary>
-        /// Checks if user exists in the database with the given username and password
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
-        /// <returns>Returns true if user exists in the database</returns>
-        public bool credentials(String userName, String password)
-        {
-            try
-            {
-                var account = _context.Accounts.Single(acc => acc.Username == userName && acc.Password == password);
-                return true;
-            }
-            catch (ArgumentNullException)
-            {
-                Console.WriteLine($"\nError: Incorrect username or password");
-                return false;
-            }
-            catch (InvalidOperationException)
-            {
-                Console.WriteLine($"\nError: Incorrect username or password");
+                Console.WriteLine($"Could Retrieve Account {obj.Username}\nError Message: {e.Message}");
                 return false;
             }
         }

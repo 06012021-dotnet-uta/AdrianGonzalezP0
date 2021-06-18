@@ -16,12 +16,14 @@ using DbProduct = EcommerceDbContext.Product;
 using StoreOrder = StoreModels.Order;
 using DbOrder = EcommerceDbContext.Order;
 
+using StoreInventory = StoreModels.Inventory;
+using DbInventory = EcommerceDbContext.Inventory;
 
 namespace Mapper
 {
     public static class MapperClassDBToApp
     {
-        public static StoreAccount AppAccountToDbAccount(DbAccount accountObj)
+        public static StoreAccount DbAccountToClassAccount(DbAccount accountObj)
         {
             StoreAccount account = new()
             {
@@ -32,7 +34,7 @@ namespace Mapper
             return account;
         }
 
-        public static StoreCustomer AppCustomerToDbCustomer(DbCustomer customerObj)
+        public static StoreCustomer DbCustomerToClassCustomer(DbCustomer customerObj)
         {
             StoreCustomer customer = new()
             {
@@ -51,7 +53,7 @@ namespace Mapper
             return customer;
         }
 
-        public static StoreStore AppStoreToDbStore(DbStore storeObj)
+        public static StoreStore DbStoreToAppStore(DbStore storeObj)
         {
             StoreStore store = new()
             {
@@ -67,7 +69,7 @@ namespace Mapper
             return store;
         }
 
-        public static StoreProduct AppProducToDbProduct(DbProduct productObj)
+        public static StoreProduct DbProducToAppProduct(DbProduct productObj)
         {
             StoreProduct product = new()
             {
@@ -82,7 +84,7 @@ namespace Mapper
             return product;
         }
 
-        public static StoreType AppTypeToDbType(DbType categoryObj)
+        public static StoreType DbTypeToAppType(DbType categoryObj)
         {
             StoreType category = new()
             {
@@ -93,7 +95,7 @@ namespace Mapper
             return category;
         }
 
-        public static StoreOrder AppOrderToDbOrder(DbOrder orderObj)
+        public static StoreOrder DbOrderToAppOrder(DbOrder orderObj)
         {
             StoreOrder order = new()
             {
@@ -106,6 +108,18 @@ namespace Mapper
             };
 
             return order;
+        }
+
+        public static StoreInventory DbInventoryToAppInventory(DbInventory inventoryObj)
+        {
+            StoreInventory inventory = new StoreInventory()
+            {
+                StoreId = inventoryObj.StoreId,
+                ProductId = inventoryObj.ProductId,
+                Quantity = (int)inventoryObj.Quantity
+            };
+
+            return inventory;
         }
     }
 }
