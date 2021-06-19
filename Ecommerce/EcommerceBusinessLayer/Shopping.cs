@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EcommerceDbContext;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,10 @@ namespace EcommerceBusinessLayer
     public class Shopping
     {
         private readonly Location _location;
-        private Dictionary<Tuple<int, int, int>, Tuple<int,decimal>> _shoppingCart;  // Hold cutomer Items
-        private int _customerId;
-        private int _storeId;
-        private int _quantity;
-        private decimal _overAllTotalAmount;
+        private readonly Project0Context _;
+        private Dictionary<ProductModel, int> _shoppingCart;  // Holds customer items
+        private int _customerId;                              // Current userId
+        private int _storeId;                                 // Current storeId 
 
         public Shopping(int customerId, int storeId)
         {
@@ -25,8 +25,7 @@ namespace EcommerceBusinessLayer
             this._shoppingCart = new();
             this._customerId = customerId;
             this._storeId = storeId;
-            this._quantity = 0;
-            this._overAllTotalAmount = 0.00m;
+            _ = new(); 
         }
 
         /// <summary>
@@ -37,8 +36,6 @@ namespace EcommerceBusinessLayer
         /// <returns></returns>
          async Task<bool> AddItem(ProductModel product, int quantity)
         {
-            decimal total = 0.00m;
-            bool didAddItem;
             bool hasInventory = await _location.HasInventory(_storeId, product.ProductId);
             bool checkQuantity = quantity <= await _location.Quantity(_storeId, product.ProductId);
 
@@ -49,33 +46,50 @@ namespace EcommerceBusinessLayer
                 return false;
             }
 
-            // Create key for cart
-            Tuple<int, int, int> products = new(_customerId, _storeId, product.ProductId);
+            // Add item to cart
+            _shoppingCart.Add(product, quantity);
 
-            // Calculate total
-            total = product.UnitPrice * quantity;
-
-            // Create value for cart
-            Tuple<int, decimal> quantity_total = new(quantity, total);
-
-            _shoppingCart.Add(products, quantity_total);
-
-            // Decrament from inventory 
-            didAddItem = await _location.DecramentItem(_storeId, product.ProductId, quantity);
-
-            return didAddItem;
+            return true;
         }
 
-        void DisplayCart()
+        /// <summary>
+        /// Returns all current items from cart
+        /// </summary>
+        /// <returns>List of Products with its quantity</returns>
+        Dictionary<ProductModel, int> GetCart() => _shoppingCart;
+        
+        /// <summary>
+        /// Checks out with all items that are in the cart.
+        /// </summary>
+        /// <returns> A reciete </returns>
+        public async Task<string> CheckOut() 
         {
+            decimal total = 0.00m;
+            //Add items to order
+            foreach (var product in _shoppingCart)
+            {
+                total += (product.Key.UnitPrice * product.Value);
+                Order orders = new()
+                {
+                    CustomerId = _customerId,
+                    StoreId = _storeId,
+                    ProductId = product.Key.ProductId,
+                    Quantity = product.Value,
+                    TotalAmount = (product.Key.UnitPrice * product.Value)
+                };
 
+                try
+                {
+                    await _.Orders.AddAsync(orders);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Could not add items to order:\n\t{product.Key.productInfo()}");
+                    continue;
+                }
+            }
+
+            return $"Total Amount: {total}";
         }
-
-        void DisplayAllItems()
-        {
-
-        }
-
-        decimal CheckOut() { return _overAllTotalAmount; }
     }
 }
