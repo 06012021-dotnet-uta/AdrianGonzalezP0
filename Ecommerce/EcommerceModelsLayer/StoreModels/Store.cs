@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 namespace StoreModels
 
@@ -6,7 +7,7 @@ namespace StoreModels
     /// The main <c>Store</c> class. 
     /// Concatinates all of the fields together of the and returns it as a string 
     /// </summary>
-    public class Store : Address
+    public class Store : Address, IComparable
     {
         public int StoreId { get; set; }
         public string StoreName { get; set; }
@@ -41,6 +42,17 @@ namespace StoreModels
         {
             string store_info = $"\t\tStore Information\nName: {this.StoreName}\nAddress:{this.Street}\nCity: {this.City}\nState: {this.State}\n{this.ZipCode}\nContact Number: {this.ContactNumber}\nDesciption: {this.Description}";
             return store_info;
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+
+            Store otherStore = obj as Store;
+            if (otherStore != null)
+                return StoreName.CompareTo(otherStore.StoreName);
+            else
+                throw new ArgumentException("Object is not a Store");
         }
     }
 }

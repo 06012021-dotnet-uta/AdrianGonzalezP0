@@ -18,5 +18,12 @@ namespace EcommerceBusinessLayer
             Console.WriteLine($"\n {userInput} is NOT a valid choice.\n Select again.\n");
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         }
+
+        public static void IncorrectLogin()
+        {
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine($"\n Incorrect username and passord.\n Try again.\n");
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        }
     }
 }

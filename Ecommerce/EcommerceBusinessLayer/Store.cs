@@ -32,6 +32,8 @@ namespace EcommerceBusinessLayer
 
                 listOfStores = stores.ConvertAll(store => MapperClassDBToApp.DbStoreToAppStore(store));
 
+                listOfStores.Sort();
+
                 return listOfStores;
             }
             catch (ArgumentNullException e)
