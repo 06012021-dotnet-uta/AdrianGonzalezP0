@@ -124,7 +124,8 @@ namespace EcommerceBusinessLayer
                 List<DbInventory> dbInventoryList = _.Inventories
                     .Where(inventory => inventory.StoreId == storeId).ToList();
 
-                storeInventory = MapperClassDBToApp.DbInventoryToAppInventory(dbInventory);
+                storeInventoryList = dbInventoryList.ConvertAll(items => MapperClassDBToApp.DbInventoryToAppInventory(items));
+
                 return storeInventoryList;
             }
             catch (ArgumentNullException e)

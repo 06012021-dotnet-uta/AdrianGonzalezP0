@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceBusinessLayer
 {
-    public class StoreBusiness: IStore
+    public class StoreBusiness 
     {
         private readonly Project0Context _;
         private DbStore dbStore;

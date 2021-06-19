@@ -16,7 +16,7 @@ namespace EcommerceBusinessLayer
     {
         private readonly Project0Context _;
         private DbProduct dbProduct;
-        private StoreProduct StoreProduct;
+        private StoreProduct storeProduct;
 
         public ProductBusiness()
         {
@@ -117,6 +117,21 @@ namespace EcommerceBusinessLayer
         public StoreProduct Read(string keyValue)
         {
             throw new NotImplementedException();
+        }
+
+        public StoreProduct GetSingleItem(int keyValue)
+        {
+            try
+            {
+                dbProduct = _.Products.SingleOrDefault(product => product.ProductId == keyValue);
+                storeProduct = MapperClassDBToApp.DbProducToAppProduct(dbProduct);
+                return storeProduct;
+            }
+            catch (DbUpdateException e)
+            {
+                Console.WriteLine($"Could not find item with {keyValue}\nErro Message: {e.Message}");
+                return null;
+            }
         }
 
         public bool Update(StoreProduct obj)

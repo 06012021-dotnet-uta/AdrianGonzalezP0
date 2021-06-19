@@ -2,17 +2,23 @@
 using StoreModels;
 using StoreCustomer = StoreModels.Customer;
 using DbCustomer = EcommerceDbContext.Customer;
+using System.Threading.Tasks;
 using EcommerceBusinessLayer;
+using System.Collections.Generic;
 
 namespace EcommerceUI
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            Location location = new Location();
+        // Store
+        // Shopping
+        // Login
+        // Signup
 
-            Console.WriteLine($"Does have inventory? {location.HasInventory(1,1)}");
+        static async Task Main(string[] args)
+        {
+          
+
         }
     } // EOC
 } // EON
