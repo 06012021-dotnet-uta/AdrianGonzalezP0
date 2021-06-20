@@ -24,7 +24,7 @@ namespace StoreModels
 
         public string productInfo()
         {
-            string product_info = $"\t\tProduct Information\nProduct name: {this.ProductName}\nCategory: {base.CategoryName}\nUnit Price: {this.UnitPrice}\nDesciption: {this.Description}";
+            string product_info = $"\t\t{this.ProductName}\n\tProductId: {this.ProductId}\n\tCategory: {base.CategoryName}\n\tUnit Price: {this.UnitPrice}\n\tDesciption: {this.Description}";
             return product_info;
         }
 

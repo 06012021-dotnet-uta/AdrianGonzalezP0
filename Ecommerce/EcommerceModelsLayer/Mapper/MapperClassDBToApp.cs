@@ -73,6 +73,7 @@ namespace Mapper
         {
             StoreProduct product = new()
             {
+                ProductId = productObj.ProductId,
                 CategoryId = (int)productObj.TypeId,
                 CategoryName = productObj.ProductName,
                 ProductName = productObj.ProductName,

@@ -102,7 +102,7 @@ namespace EcommerceBusinessLayer
             List<StoreInventory> storeInventoryList = new();
             try
             {
-                List<DbInventory> dbInventoryList= _.Inventories
+                List<DbInventory> dbInventoryList = _.Inventories
                     .Where(inventory => inventory.ProductId == productId).ToList();
 
                 storeInventory = MapperClassDBToApp.DbInventoryToAppInventory(dbInventory);

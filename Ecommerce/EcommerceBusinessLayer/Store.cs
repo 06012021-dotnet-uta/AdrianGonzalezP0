@@ -9,6 +9,7 @@ using DbStore = EcommerceDbContext.Store;
 using ProductModel = StoreModels.Product;
 using DbProduct = EcommerceDbContext.Product;
 using DbInventory = EcommerceDbContext.Inventory;
+using InventoryModel = StoreModels.Inventory;
 using Mapper;
 
 namespace EcommerceBusinessLayer
@@ -64,22 +65,18 @@ namespace EcommerceBusinessLayer
             }
         }
 
-        public List<ProductModel> GetAllProduct(int storeId)
+        public List<InventoryModel> GrabAllInventory(int storeId)
         {
-            List<ProductModel> listOfProducts = new();
+            List<InventoryModel> inventory;
 
             try
             {
                 List<DbInventory> inventories = _.Inventories.Where(inventory => inventory.StoreId == storeId).ToList();
+
+                inventory = inventories.ConvertAll(inv => MapperClassDBToApp.DbInventoryToAppInventory(inv));
+
+                return inventory;
                 
-                foreach (var inventory in inventories)
-                {
-                    DbProduct dbProduct = _.Products.Single(product => product.ProductId == inventory.ProductId);
-
-                    listOfProducts.Add(MapperClassDBToApp.DbProducToAppProduct(dbProduct));
-                }
-
-                return listOfProducts;
             }
             catch (ArgumentNullException e)
             {

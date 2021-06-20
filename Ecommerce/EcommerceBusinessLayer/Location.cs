@@ -14,11 +14,9 @@ namespace EcommerceBusinessLayer
     public class Location
     {
         private readonly Project0Context _;
-        private DbInventory dbInventory;
         public Location ()
         {
             _ = new();
-            dbInventory = new();
         }
 
         /// <summary>
@@ -27,19 +25,22 @@ namespace EcommerceBusinessLayer
         /// <param name="storeId"></param>
         /// <param name="productId"></param>
         /// <returns></returns>
-        public async Task<bool> HasInventory(int storeId, int productId)
+        public bool HasInventory(int storeId, int productId)
         {
-            dbInventory.StoreId = storeId;
-            dbInventory.ProductId = productId;
+            DbInventory currrentInventory = new()
+            {
+                StoreId = storeId,
+                ProductId = productId,
+            };
 
             try
             {
-                Task<bool> check = Task.FromResult(_.Inventories.Contains(dbInventory));
-                return await check;
+                bool check = _.Inventories.Contains(currrentInventory);
+                return check;
             }
             catch (Exception)
             {
-                Console.WriteLine("Something went wront");
+                Console.WriteLine("Error - Something went wront");
                 return false;
             }
         }
@@ -50,56 +51,62 @@ namespace EcommerceBusinessLayer
         /// <param name="storeId"></param>
         /// <param name="productId"></param>
         /// <returns>Returns true if successfully decramented from Inventory</returns>
-        public async Task<bool> DecramentItem(int storeId, int productId, int quantity)
+        public bool DecramentItem(int storeId, int productId, int quantity)
         {
+            DbInventory currrentInventory = new()
+            {
+                StoreId = storeId,
+                ProductId = productId,
+                Quantity = quantity
+            };
 
-            dbInventory.StoreId = storeId;
-            dbInventory.ProductId = productId;
-            dbInventory.Quantity = quantity;
-
-            
             try
             {
-                _.Inventories.Update(dbInventory);
-                await _.SaveChangesAsync();
                 return true;
             }
-            catch (DbUpdateException e)
+            catch (DbUpdateException)
             {
-                Console.WriteLine($"Could not remove Inventory \n\tStoreId: {storeId}\n\tProductId {productId}\nErro Message: {e.Message}");
+                Console.WriteLine($"\nError - Could not remove Inventory \n\tStoreId: {storeId}\n\tProductId {productId}\n");
                 return false;
             }
         }
 
-        public async Task<bool> IncramentItem(int storeId, int productId, int quantity)
+        //public List<ProductModel> GetAllProduct(int storeId)
+        //{
+        //    List<ProductModel> listOfProducts = new();
+
+        //    try
+        //    {
+        //        List<DbInventory> inventories = _.Inventories.Where(inventory => inventory.StoreId == storeId).ToList();
+
+        //        foreach (var inventory in inventories)
+        //        {
+        //            DbProduct dbProduct = _.Products.Single(product => product.ProductId == inventory.ProductId);
+
+        //            listOfProducts.Add(MapperClassDBToApp.DbProducToAppProduct(dbProduct));
+        //        }
+
+        //        return listOfProducts;
+        //    }
+        //    catch (ArgumentNullException e)
+        //    {
+
+        //        Console.WriteLine($"Could not retrieve all of stores with: {storeId}\nError message {e.Message}");
+        //        return null;
+        //    }
+        //}
+
+        public int GetQuantity(int storeId, int productId)
         {
             try
             {
-                _.Inventories.Update(dbInventory);
-                await _.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateException e)
-            {
-                Console.WriteLine($"Could not remove Inventory \n\tStoreId: {storeId}\n\tProductId {productId}\nErro Message: {e.Message}");
-                return false;
-            }
-        }
-
-        public async Task<int> Quantity(int storeId, int productId)
-        {
-            try
-            {
-                dbInventory = await _.Inventories.SingleAsync(inventory => inventory.StoreId == storeId && inventory.ProductId == productId);
-
-                int quantity = (int)dbInventory.Quantity;
-
+                int quantity = (int)_.Inventories.Single(inventory => inventory.StoreId == storeId && inventory.ProductId == productId).Quantity;
                 return quantity;
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
-                Console.WriteLine($"Could not retrive qunatity\nError Message - {e.Message}");
-                return -1;
+                Console.WriteLine($"\nError - Could not Grab item and its quantity. storeId: {storeId} productId {productId}\n");
+                return 0;
             }
         }
     }

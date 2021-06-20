@@ -19,13 +19,13 @@ namespace EcommerceBusinessLayer
             _ = new();
         }
 
-        public async Task<bool> CreateAccount(StoreAccount account)
+        public bool CreateAccount(StoreAccount account)
         {
             Account newAccount = MapperClassAppToDb.AppAccountToDbAccount(account);
             try
             {
-                await _.Accounts.AddAsync(newAccount);
-                await _.SaveChangesAsync();
+                 _.Accounts.Add(newAccount);
+                 _.SaveChanges();
                 return true;
             }
             catch (DbUpdateConcurrencyException)
@@ -35,13 +35,13 @@ namespace EcommerceBusinessLayer
             }
         }
 
-        public async Task<bool> CreateCustomer(StoreCustomer newCustomer)
+        public bool CreateCustomer(StoreCustomer newCustomer)
         {
             Customer customer = MapperClassAppToDb.AppCustomerToDbCustomer(newCustomer);
             try
             {
-                await _.Customers.AddAsync(customer);
-                await _.SaveChangesAsync();
+                 _.Customers.AddAsync(customer);
+                 _.SaveChanges();
                 return true;
             }
             catch (DbUpdateConcurrencyException)
