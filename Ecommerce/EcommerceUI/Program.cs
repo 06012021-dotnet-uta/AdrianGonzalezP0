@@ -14,6 +14,9 @@ namespace EcommerceUI
         static readonly Store stores = new();  // Store
         static readonly Login login = new();   // Login
         static readonly Signup signup = new(); // Signup
+        static readonly OrderBusiness orderBusiness = new(); // Orders
+        static readonly ProductBusiness productBusiness = new(); // Products
+        static readonly CustomerBusiness customerBusiness = new(); // Customer
 
         static string userInput = "default"; // User input as a string
         static sbyte outResult = -1;           // Convert user's input
@@ -43,7 +46,7 @@ namespace EcommerceUI
 
                     Console.Write("Enter Selection: ");
                     userInput = Console.ReadLine();
-                    isValid = SByte.TryParse(userInput, out outResult);
+                    isValid = sbyte.TryParse(userInput, out outResult);
 
                 } while (!isValid || outResult > 2 || outResult < 1);
 
@@ -65,15 +68,15 @@ namespace EcommerceUI
 
 
                 // Go shopping, checkOrders history, or LookupCustomer
-                Console.WriteLine($"\n\t\t*What are we doing today {currentUser.Fname}?*\n");
                 do
                 {
+                    Console.WriteLine($"\n\t\t*What are we doing today {currentUser.Fname}?*\n");
                     Console.WriteLine($"1. Shopping\n2. View Order History\n3. Search Customer by Name\n4. Logout");
 
 
                     Console.Write("Enter Selection: ");
                     userInput = Console.ReadLine();
-                    isValid = SByte.TryParse(userInput, out outResult);
+                    isValid = sbyte.TryParse(userInput, out outResult);
 
                     switch (outResult)
                     {
@@ -81,24 +84,24 @@ namespace EcommerceUI
                             Shopping(currentUser);
                             break;
                         case 2:
-                            CheckOrders(currentUser);
+                            OrderHistory(currentUser);
                             break;
                         case 3:
-                            LookupCustomer();
+                            LookupCustomer(currentUser);
                             break;
                         case 4:
-                            Console.WriteLine($"\n\t\tSee you later {currentUser.Fname} {currentUser.Lname}. Come back soon!\n");
+                            Console.WriteLine($"\n\t\t---See you later {currentUser.Fname} {currentUser.Lname}. Come back soon!---");
                             break;
                         default:
                             DisplayErrors.IncorrectInput(userInput);
                             break;
                     }
 
-                } while (!isValid || outResult > 4);
+                } while (!isValid || outResult < 4);
 
                 Flush();
 
-                Console.WriteLine($"\n\n");
+                Console.WriteLine($"\n");
             } while (true);
 
         }
@@ -255,7 +258,7 @@ namespace EcommerceUI
                             // User checks out
                             string total = shoppingCart.CheckOut(products);
                             Console.WriteLine(total);
-                            Console.Write("Shop at another location?\nEnter Yes or No: ");
+                            Console.Write("\nShop at another location?\nEnter Yes or No: ");
                             string input = Console.ReadLine();
                             continueShopping = input.ToLower().Contains("y");
                             isCheckout = false;
@@ -263,28 +266,124 @@ namespace EcommerceUI
                         default:
                             break;
                     }
-
-                    Console.WriteLine($"1. Add Another Item\n2. Checkout\n");
-                    Console.Write("Select Option: ");
-                    option = Console.ReadLine();
-                    sbyte.TryParse(option, out optionSbyte);
-
-                    // Clear user last input
+                    
+                    // Reset userinput
                     Flush();
-
+                    if (isCheckout)
+                    {
+                        Console.WriteLine($"1. Add Another Item\n2. Checkout\n");
+                        Console.Write("Select Option: ");
+                        option = Console.ReadLine();
+                        sbyte.TryParse(option, out optionSbyte);
+                    }
 
                 } while (isCheckout);
 
             } while (continueShopping);
+            
+            Console.WriteLine($"\n\n");
 
+            //Reset userinput
+            Flush();
         }
 
         /// <summary>
         /// CheckOrders
         /// </summary>
         /// <param name="currentUser"></param>
-        static void CheckOrders(CustomerModel currentUser) { }
-        static void LookupCustomer() { }
+        static void OrderHistory(CustomerModel currentUser) 
+        {
+            // Reset inputs
+            Flush();
+
+            Console.WriteLine($"\n\t\t*Welcome {currentUser.Fname}. Which orders are we looking for?*\n");
+            List<Order> orders = new();
+            List<StoreModel> storeList = stores.GetAllStore();
+            int lengthOfStores = storeList.Count;
+            //List<Product> products = productBusiness.GetAllProduct();
+            bool isDone = false;
+
+            // Loop Until done
+            do
+            {
+                // Select View order by: Store, detial, or all orders
+                do
+                {
+                    if (!isValid || (outResult > 2 || outResult < -1)) DisplayErrors.IncorrectInput(userInput);
+
+                    Console.WriteLine($"\n1. By Store\n2. {currentUser.Fname}'s Order\n3. All Orders\n4. Exit");
+
+                    Console.Write("Enter Selection: ");
+                    userInput = Console.ReadLine();
+                    isValid = sbyte.TryParse(userInput, out outResult);
+
+                } while (!isValid || outResult > 4 || outResult < 1);
+
+                switch (outResult)  
+                {
+                    case 1:
+                        ValidateUserInput(lengthOfStores, listOfStores: storeList);
+                        orders = orderBusiness.GetOrderByStoreId(storeList[outResult-1].StoreId);
+                        break;
+                    case 2:
+                        orders = orderBusiness.GetOrderByCustomerId(currentUser.CustomerId);
+                        break;
+                    case 3:
+                        orders = orderBusiness.GetAllOrders();
+                        break;
+                    case 4:
+                        isDone = true;
+                        break;
+                }
+
+                Console.WriteLine("\n\t\t--Orders History--\n");
+                foreach (var order in orders)
+                {
+                    Console.WriteLine(order.GetOrderInfo());
+                }
+                Console.WriteLine("\n\t\t------------------\n");
+
+                Flush();
+
+            } while (!isDone);
+
+
+        }
+
+        /// <summary>
+        /// Display a customers info
+        /// </summary>
+        /// <param name="currentUser"></param>
+        static void LookupCustomer(CustomerModel currentUser) 
+        {
+            bool isSearching = true;
+            do
+            {
+                Console.WriteLine($"\n\tSearch Customer\n");
+                Console.Write("Enter First Name: ");
+                string fname = Console.ReadLine();
+                Console.Write("Enter Last Name: ");
+                string lname = Console.ReadLine();
+
+                List<Customer> customers = customerBusiness.SearchCustomer(fname, lname);
+
+                if (customers.Count > 0)
+                {
+                    Console.WriteLine("---Customer(s) Information---");
+                    foreach (Customer customer in customers)
+                    {
+                        Console.WriteLine(customer.customerInfo());
+                    }
+                    Console.WriteLine("\n-----------------------------\n");
+                }
+
+                Console.Write("Continue Searching... yes or no? ");
+                string input = Console.ReadLine();
+
+                isSearching = input.ToLower().Contains('y');
+
+            } while (isSearching);
+        }
 
 
         /// <summary>
@@ -314,7 +413,7 @@ namespace EcommerceUI
 
                     if (!isValid || (outResult > 2 || outResult < -1)) DisplayErrors.IncorrectInput(userInput);
 
-                    Console.WriteLine("\t\tSelct One of the Product:\n");
+                    Console.WriteLine("\tSelect One of the Product:\n");
                     foreach (Product product in listOfProducts)
                     {
                         Console.WriteLine($"({selection++}.) {product.productInfo()}\n");
@@ -334,7 +433,7 @@ namespace EcommerceUI
 
                     if (!isValid || (outResult > 2 || outResult < -1)) DisplayErrors.IncorrectInput(userInput);
 
-                    Console.WriteLine("\t\tSelct a Store Location:\n");
+                    Console.WriteLine("\tSelect a Store Location:\n");
                     foreach (StoreModel store in listOfStores)
                     {
                         Console.WriteLine($" ({selection++}).\n\tStore Name: {store.StoreName}\n\tStreet: {store.Street}\n");
@@ -342,85 +441,10 @@ namespace EcommerceUI
 
                     Console.Write("Enter Selection: ");
                     userInput = Console.ReadLine();
-                    isValid = SByte.TryParse(userInput, out outResult);
+                    isValid = sbyte.TryParse(userInput, out outResult);
 
                 } while (!isValid || outResult > length || outResult < 1);
             }
         }
     } // EOC
 } // EON
-
-
-
-
-
-//// Select store to shop
-//List<StoreModel> storesList = stores.GetAllStore();
-//List<Product> products;
-//int storeid;
-//int numberOfStores = storesList.Count;
-
-//// Section to select another store
-//do
-//{
-//    Console.WriteLine($"\n\t\t*Welcome {currentUser.Fname}. Where are we shopping today?*\n");
-
-//    // Validates users input and display all stores location
-//    ValidateUserInput(numberOfStores, listOfStores: storesList);
-
-//    // Get StoreId
-//    storeid = storesList[outResult - 1].StoreId;
-
-
-//    // Create Shopping cart
-//    Shopping cart = new(currentUser.CustomerId, storeid);
-//    bool isCheckout = true;
-
-//    // Show all of the products available and validate user input
-//    string option;
-//    sbyte optionSbyte = 1;
-//    int Quantity;
-//    do
-//    {
-
-//        // Grab Products based on store location
-//        products = stores.GetAllProduct(storeid);
-//        int numProducts = products.Count;
-//        bool isCoverted;
-
-
-//        switch (optionSbyte)
-//        {
-//            case 1:
-//                // Grab item what user is wanting
-//                ValidateUserInput(numProducts, listOfProducts: products);
-//                Console.WriteLine($"How many would like to take? {products[outResult - 1].ProductName} Quantity: {stores.GetQuantity(storeid, products[outResult - 1].ProductId)}\n");
-//                Console.Write("Enter Quantity: ");
-//                option = Console.ReadLine();
-//                isCoverted = int.TryParse(option, out Quantity);
-//                if (isCoverted)
-//                {
-//                    cart.AddItem(products[outResult - 1], Quantity);
-//                    Console.WriteLine("Successfully added to cart");
-//                    cart.UpdateStore(products[outResult - 1], Quantity);
-//                }
-//                break;
-//            case 2:
-//                Console.WriteLine("Checkout");
-//                break;
-//            default:
-//                break;
-//        }
-
-//        Console.WriteLine($"1. Add Another Item\n2. Checkout\n");
-//        Console.Write("Select Option: ");
-//        option = Console.ReadLine();
-//        sbyte.TryParse(option, out optionSbyte);
-
-//        // Clear user last input
-//        Flush();
-
-
-//    } while (isCheckout);
-
-//} while (true);

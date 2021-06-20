@@ -74,7 +74,7 @@ namespace Mapper
         {
             DbProduct product = new()
             {
-                ProductId = productObj.CategoryId,
+                ProductId = productObj.ProductId,
                 TypeId = productObj.CategoryId,
                 ProductName = productObj.ProductName,
                 UnitPrice = productObj.UnitPrice,

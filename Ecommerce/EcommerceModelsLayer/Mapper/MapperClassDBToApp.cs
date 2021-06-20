@@ -104,6 +104,7 @@ namespace Mapper
                 StoreId = orderObj.StoreId,
                 ProductId = orderObj.ProductId,
                 UnitPrice = orderObj.UnitPrice,
+                Quantity = orderObj.Quantity,
                 TotalAmount = orderObj.TotalAmount,
                 OrderDate = orderObj.OrderDate
             };

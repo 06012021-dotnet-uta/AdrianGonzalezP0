@@ -23,5 +23,11 @@ namespace StoreModels
             this.TotalAmount = TotalAmount;
             this.OrderDate = OrderDate;
         }
+
+        public string GetOrderInfo()
+        {
+            string oderInfo = $"\n\tCustomer id: {this.CustomerId}\n\tStoreId: {this.StoreId}\n\tProductId: {this.ProductId}\n\tUnit Price: {this.UnitPrice}\n\tQuantity: {this.Quantity}\n\tTotal Amount: {this.TotalAmount}\n\tOrder Date: {this.OrderDate}";
+            return oderInfo;
+        }
     }
 }

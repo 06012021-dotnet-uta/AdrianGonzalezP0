@@ -12,7 +12,7 @@ using StoreProduct = StoreModels.Product;
 
 namespace EcommerceBusinessLayer
 {   
-    class ProductBusiness : IProduct
+    public class ProductBusiness : IProduct
     {
         private readonly Project0Context _;
         private DbProduct dbProduct;

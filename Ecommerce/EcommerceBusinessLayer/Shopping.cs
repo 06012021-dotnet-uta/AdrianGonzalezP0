@@ -84,7 +84,6 @@ namespace EcommerceBusinessLayer
 
             _.Inventories.UpdateRange(inventory);
 
-
             //Add items to order
             foreach (var product in _shoppingCart)
             {
@@ -105,7 +104,6 @@ namespace EcommerceBusinessLayer
                 try
                 {
                     _.Orders.Add(orders);
-                    _.Inventories.UpdateRange(inventory);
                 }
                 catch (Exception)
                 {

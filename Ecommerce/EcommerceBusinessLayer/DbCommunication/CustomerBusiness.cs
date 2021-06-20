@@ -109,7 +109,20 @@ namespace EcommerceBusinessLayer
 
         public List<StoreCustomer> SearchCustomer(string Fname, string Lname)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<DbCustomer> dbCustomer = _context.Customers
+                    .Where(customer => customer.Fname.ToLower().Trim() == Fname.ToLower().Trim() && customer.Lname.ToLower().Trim() == Lname.ToLower().Trim()).ToList();
+
+                List<StoreCustomer> storeCustomers = dbCustomer.ConvertAll(customer => MapperClassDBToApp.DbCustomerToClassCustomer(customer));
+
+                return storeCustomers;
+            }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("Error - Could not retrieve customer(s)");
+                return null;
+            }
         }
 
         public StoreCustomer SearchCustomer(string username)

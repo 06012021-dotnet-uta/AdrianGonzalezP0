@@ -29,12 +29,12 @@ namespace EcommerceBusinessLayer
 
             try
             {
-                Account acc = MapperClassAppToDb.AppAccountToDbAccount(account);
-                return _.Accounts.Contains(acc); 
+                _.Accounts.Single(acc => acc.Username == account.Username && acc.Password == account.Password);
+
+                return true;
             }
             catch (Exception)
             {
-                Console.WriteLine($"Incorrect username or password");
                 return false;
             }
         }
