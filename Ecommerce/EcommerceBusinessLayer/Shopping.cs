@@ -43,7 +43,7 @@ namespace EcommerceBusinessLayer
             // Check if quantity
             if (!hasInventory && !checkQuantity)
             {
-                Console.WriteLine($"\nError - CheckQuantity: {checkQuantity} CheckInventory: {hasInventory}\n");
+                Console.WriteLine($"\nError - [In Stock: {checkQuantity}] [CheckInventory: {hasInventory}]\n");
                 return false;
             }
 
@@ -51,12 +51,10 @@ namespace EcommerceBusinessLayer
             if (_shoppingCart.ContainsKey(product.ProductId))
             {
                 _shoppingCart[product.ProductId] += quantity;
-                Console.WriteLine($"Total in cart {_shoppingCart.Count}");
 
             } else
             {
                 _shoppingCart.Add(product.ProductId, quantity);
-                Console.WriteLine($"Total in cart {_shoppingCart.Count}");
             }
 
             //Decrament items

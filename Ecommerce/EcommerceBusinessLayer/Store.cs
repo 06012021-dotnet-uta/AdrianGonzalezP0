@@ -23,6 +23,10 @@ namespace EcommerceBusinessLayer
             _ = new();
         }
 
+        /// <summary>
+        /// Returns all stores in Database
+        /// </summary>
+        /// <returns>A list of stores</returns>
         public List<StoreModel> GetAllStore()
         {
             List<StoreModel> listOfStores = new();
@@ -45,6 +49,11 @@ namespace EcommerceBusinessLayer
             }
         }
 
+        /// <summary>
+        /// Returns all stores that match with a specific street
+        /// </summary>
+        /// <param name="Street"></param>
+        /// <returns>List of Stores</returns>
         public List<StoreModel> GetStoreByLocation(string Street)
         {
             List<StoreModel> listOfStores = new();
@@ -65,6 +74,11 @@ namespace EcommerceBusinessLayer
             }
         }
 
+        /// <summary>
+        /// Returns all stores that match with a specific storeId
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <returns>List of Stores</returns>
         public List<InventoryModel> GrabAllInventory(int storeId)
         {
             List<InventoryModel> inventory;
