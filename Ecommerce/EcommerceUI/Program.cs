@@ -49,13 +49,11 @@ namespace EcommerceUI
                     isValid = sbyte.TryParse(userInput, out outResult);
 
                 } while (!isValid || outResult > 2 || outResult < 1);
-
-                // Flush Previous user choices
-                Flush();
                
                 // Sigup process
                 if (outResult == 2)
                 {
+                    Console.WriteLine("Create an account");
                     Signup();
                 }
 
@@ -162,6 +160,8 @@ namespace EcommerceUI
                 isAccountCreated =  signup.CreateAccount(account);
 
             } while (!isAccountCreated);
+
+            Console.WriteLine("\n\t\t---Personal Information---\n");
 
             CustomerModel customer = new();
             bool isCustomerCreated = true;
@@ -271,7 +271,7 @@ namespace EcommerceUI
                     Flush();
                     if (isCheckout)
                     {
-                        Console.WriteLine($"1. Add Another Item\n2. Checkout\n");
+                        Console.WriteLine($"\n1. Add Another Item\n2. Checkout\n");
                         Console.Write("Select Option: ");
                         option = Console.ReadLine();
                         sbyte.TryParse(option, out optionSbyte);
@@ -311,7 +311,7 @@ namespace EcommerceUI
                 {
                     if (!isValid || (outResult > 2 || outResult < -1)) DisplayErrors.IncorrectInput(userInput);
 
-                    Console.WriteLine($"\n1. By Store\n2. {currentUser.Fname}'s Order\n3. All Orders\n4. Exit");
+                    Console.WriteLine($"\n1. By Store\n2. {currentUser.Fname}'s Order\n3. All Orders\n4. Exit\n");
 
                     Console.Write("Enter Selection: ");
                     userInput = Console.ReadLine();
@@ -336,12 +336,21 @@ namespace EcommerceUI
                         break;
                 }
 
-                Console.WriteLine("\n\t\t--Orders History--\n");
-                foreach (var order in orders)
+
+                // Display Order Information
+                if (orders.Count > 0)
                 {
-                    Console.WriteLine(order.GetOrderInfo());
+                    Console.WriteLine("\n\t\t--Orders History--\n");
+                    foreach (var order in orders)
+                        Console.WriteLine(order.GetOrderInfo());
+                    Console.WriteLine("\n\t\t------------------\n");
                 }
-                Console.WriteLine("\n\t\t------------------\n");
+                else if (orders.Count <= 0 && outResult != 4)
+                {
+                    Console.WriteLine("\n\t\t--Orders History--\n");
+                    Console.WriteLine("\t\tNo order history were found");
+                    Console.WriteLine("\n\t\t------------------\n");
+                }
 
                 Flush();
 
@@ -369,12 +378,20 @@ namespace EcommerceUI
 
                 if (customers.Count > 0)
                 {
-                    Console.WriteLine("---Customer(s) Information---");
+                    Console.WriteLine("\n\t\t---Customer(s) Information---\n");
+                    
                     foreach (Customer customer in customers)
-                    {
                         Console.WriteLine(customer.customerInfo());
-                    }
-                    Console.WriteLine("\n-----------------------------\n");
+                    
+                    Console.WriteLine("\n\t\t-----------------------------\n");
+                }
+                else
+                {
+                    Console.WriteLine("\n\t\t---Customer(s) Information---\n");
+                    Console.WriteLine($"\t\tNo {fname} {lname} were found\n");
+                    Console.WriteLine("\n\t\t-----------------------------\n");
+
+
                 }
 
                 Console.Write("Continue Searching... yes or no? ");
@@ -411,13 +428,13 @@ namespace EcommerceUI
                 {
                     int selection = 1;
 
-                    if (!isValid || (outResult > 2 || outResult < -1)) DisplayErrors.IncorrectInput(userInput);
-
-                    Console.WriteLine("\tSelect One of the Product:\n");
+                    Console.WriteLine("\n\tSelect One of the Product:\n");
                     foreach (Product product in listOfProducts)
                     {
                         Console.WriteLine($"({selection++}.) {product.productInfo()}\n");
                     }
+
+                    if (!isValid || (outResult > 2 || outResult < -1)) DisplayErrors.IncorrectInput(userInput);
 
                     Console.Write("Enter Selection: ");
                     userInput = Console.ReadLine();
@@ -431,13 +448,13 @@ namespace EcommerceUI
                 {
                     int selection = 1;
 
-                    if (!isValid || (outResult > 2 || outResult < -1)) DisplayErrors.IncorrectInput(userInput);
-
-                    Console.WriteLine("\tSelect a Store Location:\n");
+                    Console.WriteLine("\n\tSelect a Store Location:\n");
                     foreach (StoreModel store in listOfStores)
                     {
                         Console.WriteLine($" ({selection++}).\n\tStore Name: {store.StoreName}\n\tStreet: {store.Street}\n");
                     }
+
+                    if (!isValid || (outResult > 2 || outResult < -1)) DisplayErrors.IncorrectInput(userInput);
 
                     Console.Write("Enter Selection: ");
                     userInput = Console.ReadLine();

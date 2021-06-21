@@ -43,7 +43,7 @@ namespace StoreModels
         /// <returns>All info about the Client inlcuding Account info</returns>
         public string customerInfo()
         {
-            string customer_info = $"\t\tCustomer Information\nUsername: {this.Username}\nFirst Name: {this.Fname}\nLast Name: {this.Lname}\nAddress: {this.Street}\nCity: {this.City}\nState: {this.State}\nZipcode: {this.ZipCode}\nContact Number: {this.ContactNumber}\nEmail: {this.Email}";
+            string customer_info = $"\t\tCustomer Information\n\tUsername: {this.Username}\n\tFirst Name: {this.Fname}\n\tLast Name: {this.Lname}\n\tAddress: {this.Street}\n\tCity: {this.City}\n\tState: {this.State}\n\tZipcode: {this.ZipCode}\n\tContact Number: {this.ContactNumber}\n\tEmail: {this.Email}\n";
             return customer_info;
         }
 
