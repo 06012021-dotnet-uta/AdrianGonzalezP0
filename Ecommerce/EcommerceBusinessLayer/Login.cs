@@ -39,6 +39,11 @@ namespace EcommerceBusinessLayer
             }
         }
         
+        /// <summary>
+        /// Grabs user Customers information
+        /// </summary>
+        /// <param name="acc"></param>
+        /// <returns>The customers account</returns>
         public StoreCustomer GetUserInfo(StoreAccount acc)
         {
             try

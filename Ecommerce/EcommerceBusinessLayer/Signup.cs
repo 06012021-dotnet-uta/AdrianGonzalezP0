@@ -19,6 +19,11 @@ namespace EcommerceBusinessLayer
             _ = new();
         }
 
+        /// <summary>
+        /// Create a new account
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public bool CreateAccount(StoreAccount account)
         {
             Account newAccount = MapperClassAppToDb.AppAccountToDbAccount(account);
@@ -35,6 +40,11 @@ namespace EcommerceBusinessLayer
             }
         }
 
+        /// <summary>
+        /// Create a new Customer 
+        /// </summary>
+        /// <param name="newCustomer"></param>
+        /// <returns></returns>
         public bool CreateCustomer(StoreCustomer newCustomer)
         {
             Customer customer = MapperClassAppToDb.AppCustomerToDbCustomer(newCustomer);

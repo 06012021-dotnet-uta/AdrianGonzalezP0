@@ -242,7 +242,7 @@ namespace EcommerceUI
                             ValidateUserInput(numProducts, listOfProducts: products);
                             Product product = products[outResult - 1];
                             int quantity = inventories.Find(inventory => inventory.ProductId == product.ProductId).Quantity;
-                            Console.WriteLine($"How many would like to take? {product.ProductName} Quantity: {quantity}\n");
+                            Console.WriteLine($"How many would like to take? \n\tProduct: {product.ProductName}\n\tQuantity: {quantity}\n");
                             Console.Write("Enter Quantity: ");
                             option = Console.ReadLine();
                             isCoverted = int.TryParse(option, out Quantity);

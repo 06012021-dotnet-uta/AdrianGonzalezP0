@@ -92,13 +92,13 @@ namespace EcommerceBusinessLayer
             }
         }
 
-        public List<StoreOrder> GetOrderByStoreId(int customerId)
+        public List<StoreOrder> GetOrderByStoreId(int storeId)
         {
             List<StoreOrder> listOfOrders = new();
 
             try
             {
-                List<DbOrder> orders = _context.Orders.Where(order => order.CustomerId == customerId).ToList();
+                List<DbOrder> orders = _context.Orders.Where(order => order.StoreId == storeId).ToList();
 
                 listOfOrders = orders.ConvertAll(orders => MapperClassDBToApp.DbOrderToAppOrder(orders));
 
@@ -106,7 +106,7 @@ namespace EcommerceBusinessLayer
             }
             catch (ArgumentNullException e)
             {
-                Console.WriteLine($"Could not retrieve order with {customerId}\nError message {e.Message}");
+                Console.WriteLine($"Could not retrieve order with {storeId}\nError message {e.Message}");
                 return null;
             }
         }
