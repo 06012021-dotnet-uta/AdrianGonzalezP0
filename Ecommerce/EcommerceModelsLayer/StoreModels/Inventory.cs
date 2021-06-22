@@ -8,6 +8,7 @@ namespace StoreModels
         public int ProductId { get; set; }
         public int Quantity { get; set; }
 
+        public Inventory() { }
         public Inventory(int StoreId, int ProductId, int Quantity)
         {
             this.StoreId = StoreId;

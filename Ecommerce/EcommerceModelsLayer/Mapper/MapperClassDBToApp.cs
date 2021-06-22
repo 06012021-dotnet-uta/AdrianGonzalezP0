@@ -1,4 +1,4 @@
-using StoreAccount = StoreModels.Account;
+﻿using StoreAccount = StoreModels.Account;
 using DbAccount = EcommerceDbContext.Account;
 
 using StoreCustomer = StoreModels.Customer;
@@ -19,14 +19,13 @@ using DbOrder = EcommerceDbContext.Order;
 using StoreInventory = StoreModels.Inventory;
 using DbInventory = EcommerceDbContext.Inventory;
 
-
 namespace Mapper
 {
-    public static class MapperClassAppToDb
+    public static class MapperClassDBToApp
     {
-        public static DbAccount AppAccountToDbAccount(StoreAccount accountObj)
+        public static StoreAccount DbAccountToClassAccount(DbAccount accountObj)
         {
-            DbAccount account = new()
+            StoreAccount account = new()
             {
                 Username = accountObj.Username,
                 Password = accountObj.Password,
@@ -35,15 +34,15 @@ namespace Mapper
             return account;
         }
 
-        public static DbCustomer AppCustomerToDbCustomer(StoreCustomer customerObj)
+        public static StoreCustomer DbCustomerToClassCustomer(DbCustomer customerObj)
         {
-            DbCustomer customer = new()
+            StoreCustomer customer = new()
             {
                 CustomerId = customerObj.CustomerId,
                 Username = customerObj.Username,
                 Fname = customerObj.Fname,
                 Lname = customerObj.Lname,
-                Address = customerObj.Street,
+                Street = customerObj.Address,
                 City = customerObj.City,
                 State = customerObj.State,
                 ZipCode = customerObj.ZipCode,
@@ -54,13 +53,13 @@ namespace Mapper
             return customer;
         }
 
-        public static DbStore AppStoreToDbStore(StoreStore storeObj)
+        public static StoreStore DbStoreToAppStore(DbStore storeObj)
         {
-            DbStore store = new()
+            StoreStore store = new()
             {
                 StoreId = storeObj.StoreId,
                 StoreName = storeObj.StoreName,
-                Address = storeObj.Street,
+                Street = storeObj.Address,
                 City = storeObj.State,
                 ZipCode = storeObj.ZipCode,
                 ContactNumber = storeObj.ContactNumber,
@@ -70,14 +69,15 @@ namespace Mapper
             return store;
         }
 
-        public static DbProduct AppProducToDbProduct(StoreProduct productObj)
+        public static StoreProduct DbProducToAppProduct(DbProduct productObj)
         {
-            DbProduct product = new()
+            StoreProduct product = new()
             {
                 ProductId = productObj.ProductId,
-                TypeId = productObj.CategoryId,
+                CategoryId = (int)productObj.TypeId,
+                CategoryName = productObj.ProductName,
                 ProductName = productObj.ProductName,
-                UnitPrice = productObj.UnitPrice,
+                UnitPrice = (decimal)productObj.UnitPrice,
                 Description = productObj.Description,
 
             };
@@ -85,38 +85,40 @@ namespace Mapper
             return product;
         }
 
-        public static DbType AppTypeToDbType (StoreType categoryObj)
+        public static StoreType DbTypeToAppType(DbType categoryObj)
         {
-            DbType category = new()
+            StoreType category = new()
             {
-                TypeId = categoryObj.CategoryId,
-                Type1 = categoryObj.CategoryName
+                CategoryId = categoryObj.TypeId,
+                CategoryName = categoryObj.Type1
             };
 
             return category;
         }
 
-        public static DbOrder AppOrderToDbOrder(StoreOrder orderObj)
+        public static StoreOrder DbOrderToAppOrder(DbOrder orderObj)
         {
-            DbOrder order = new DbOrder()
+            StoreOrder order = new()
             {
                 CustomerId = orderObj.CustomerId,
                 StoreId = orderObj.StoreId,
                 ProductId = orderObj.ProductId,
                 UnitPrice = orderObj.UnitPrice,
+                Quantity = orderObj.Quantity,
                 TotalAmount = orderObj.TotalAmount,
                 OrderDate = orderObj.OrderDate
             };
 
             return order;
         }
-        public static DbInventory AppInventoryToDbInventory(StoreInventory inventoryObj)
+
+        public static StoreInventory DbInventoryToAppInventory(DbInventory inventoryObj)
         {
-            DbInventory inventory = new DbInventory()
+            StoreInventory inventory = new StoreInventory()
             {
                 StoreId = inventoryObj.StoreId,
                 ProductId = inventoryObj.ProductId,
-                Quantity = inventoryObj.Quantity
+                Quantity = (int)inventoryObj.Quantity
             };
 
             return inventory;
